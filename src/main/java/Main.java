@@ -1,4 +1,4 @@
-package com.company;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document ;
 import org.jsoup.nodes.Element;
@@ -6,6 +6,9 @@ import org.jsoup.select.Elements;
 import sun.security.util.Length;
 
 import java.io.IOException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Main {
@@ -24,10 +27,22 @@ public class Main {
                 e.printStackTrace();
             }
 
-            Elements listNews = doc.select("div.news");
-            //todo save to csv
-            System.out.println(listNews);
+//            Elements listNews = doc.select("div.news");
+            Elements listNews = doc.select("div.news-item-title-inner");
+//            Elements listNews = doc.select("span.news-item-date");
 
+            String row = listNews.select("span").text();
+            //todo save to csv
+//            System.out.println(listNews);
+
+            Pattern pattern = Pattern.compile("(([0-3]\\d\\.[0-1]\\d\\.\\d{4}) ([a-zA-Z]*))");
+            Matcher matcher = pattern.matcher(row);
+
+            while (matcher.find()) {
+                System.out.println(row.substring(matcher.start(), matcher.end()));
+            }
+
+//            System.out.println(row.text());
 
             Elements next = doc.select("ul.yiiPager").select("li.next").select("a");
             url = next.attr("abs:href");
